@@ -91,75 +91,58 @@ describe("Message API endpoints", () => {
     });
   });
 
-  //   it("should post a new message", (done) => {
-  //     const newMessage = {
-  //       title: "New message",
-  //       body: "This is a new message body",
-  //       author: '6122d8c5cc7f26b02d1071a0'
-  //     };
-  //     chai
-  //       .request(app)
-  //       .post("/messages")
-  //       .send(newMessage)
-  //       .end((err, res) => {
-  //         res.should.have.status(200);
-  //         res.body.should.have.property("title").equal("New message");
-  //         res.body.should.have
-  //           .property("body")
-  //           .equal("This is a new message body");
-  //         res.body.should.have
-  //           .property("author")
-  //           .equal('6122d8c5cc7f26b02d1071a0'.toString());
-  //         done();
-  //       });
-  //   });
+  it("should post a new message", (done) => {
+    const newMessage = {
+      title: "New message title",
+      body: "New message body",
+      author: this.userID,
+    };
 
-  //   it("should update a message", (done) => {
-  //     const updatedMessage = {
-  //       text: "This is an updated message",
-  //     };
-  //     Message.findOne()
-  //       .then((message) => {
-  //         return chai
-  //           .request(app)
-  //           .put(`/messages/${message.id}`)
-  //           .send(updatedMessage)
-  //           .then((res) => {
-  //             expect(res).to.have.status(200);
-  //             expect(res.body).to.be.an("object");
-  //             expect(res.body)
-  //               .to.have.property("message")
-  //               .equal(`Updated message with id ${message.id}`);
-  //             expect(res.body)
-  //               .to.have.property("data")
-  //               .that.includes(updatedMessage);
-  //             done();
-  //           });
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //         done(err);
-  //       });
-  //   });
+    chai
+      .request(app)
+      .post("/messages")
+      .send(newMessage)
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.be.an("object");
+        res.body.should.have.property("title").equal("New message title");
+        res.body.should.have.property("body").equal("New message body");
+        res.body.should.have.property("author").equal(this.userID.toString());
+        done();
+      });
+  });
 
-  //   it("should delete a message", (done) => {
-  //     Message.findOne()
-  //       .then((message) => {
-  //         return chai
-  //           .request(app)
-  //           .delete(`/messages/${message.id}`)
-  //           .then((res) => {
-  //             expect(res).to.have.status(200);
-  //             expect(res.body).to.be.an("object");
-  //             expect(res.body)
-  //               .to.have.property("message")
-  //               .equal(`Deleted message with id ${message.id}`);
-  //             done();
-  //           });
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //         done(err);
-  //       });
-  //   });
+  it("should update a message", (done) => {
+    const updatedMessage = {
+      title: "Updated message title",
+      body: "Updated message body",
+      author: this.userID,
+    };
+
+    chai
+      .request(app)
+      .put(`/messages/${this.messageID}`)
+      .send(updatedMessage)
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.be.an("object");
+        res.body.should.have.property("title").equal("Updated message title");
+        res.body.should.have.property("body").equal("Updated message body");
+        res.body.should.have.property("author").equal(this.userID.toString());
+        done();
+      });
+  });
+
+  it('should delete a message', (done) => {
+    // TODO: Complete this
+    chai.request(app)
+    .delete(`/messages/${this.messageID}`)
+    .end((err, res) => {
+      res.should.have.status(200)
+      Message.findById(this.messageID, (err, message) => {
+        expect(message).to.be.null
+        done()
+      });
+    });
+  });
 });
